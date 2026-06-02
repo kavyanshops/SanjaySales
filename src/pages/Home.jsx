@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StarIcon, ChevronRightIcon } from '../components/Icons';
+import { getTieredWholesalePrice } from '../util/productsData';
 
 export default function Home({ 
   products,            // dynamic state passed from App.jsx
@@ -10,6 +11,11 @@ export default function Home({
   onAddToCart 
 }) {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [quantities, setQuantities] = useState({});
+
+  const handleQuantityChange = (productId, val) => {
+    setQuantities(prev => ({ ...prev, [productId]: val }));
+  };
 
   const bannerSlides = [
     {
@@ -132,14 +138,11 @@ export default function Home({
   ];
 
   const brandLogos = [
-    { name: "Amul", logo: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=150&q=80" },
-    { name: "Cadbury", logo: "https://images.unsplash.com/photo-1549007994-cb92ca817bc7?auto=format&fit=crop&w=150&q=80" },
-    { name: "Haldiram's", logo: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=150&q=80" },
-    { name: "Dettol", logo: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=150&q=80" },
-    { name: "Unilever", logo: "https://images.unsplash.com/photo-1607006342411-91f15712cfa6?auto=format&fit=crop&w=150&q=80" },
-    { name: "Nestle", logo: "https://images.unsplash.com/photo-1582201942922-47e5c3e490fc?auto=format&fit=crop&w=150&q=80" },
-    { name: "ITC Aashirvaad", logo: "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80" },
-    { name: "Coca-Cola", logo: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80" }
+    { name: "Amul", logo: "amul_logo.jpg" },
+    { name: "Cadbury", logo: "cadbury_logo.jpg" },
+    { name: "Dettol", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Dettol_logo.svg/150px-Dettol_logo.svg.png" },
+    { name: "Colgate", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Colgate_Logo.svg/150px-Colgate_Logo.svg.png" },
+    { name: "Coca-Cola", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Coca-Cola_logo.svg/150px-Coca-Cola_logo.svg.png" }
   ];
 
   return (
@@ -204,47 +207,90 @@ export default function Home({
         </div>
 
         <div className="deals-grid">
-          {superSaverDeals.map((product) => (
-            <div key={product.id} className="deal-card">
-              <div className="deal-discount-badge">{product.discountPercent}% OFF</div>
-              <div className="deal-image-wrap">
-                <img src={product.imageUrl} alt={product.name} className="deal-image" />
-              </div>
-              <div className="deal-info-wrap">
-                <span className="deal-brand">{product.brand}</span>
-                <h4 className="deal-name" onClick={() => {
-                  setSelectedCategories([product.category]);
-                  setCurrentPage('browse');
-                }}>{product.name}</h4>
-                <span className="deal-pack">{product.packSize}</span>
-                <div className="price-pricing-flex" style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                    <div className="deal-prices">
+          {superSaverDeals.map((product) => {
+            const qty = quantities[product.id] !== undefined ? quantities[product.id] : (product.moq || 10);
+            return (
+              <div key={product.id} className="deal-card">
+                <div className="deal-discount-badge">{product.discountPercent}% OFF</div>
+                <div className="deal-image-wrap">
+                  <img src={product.imageUrl} alt={product.name} className="deal-image" />
+                </div>
+                <div className="deal-info-wrap">
+                  <span className="deal-brand">{product.brand}</span>
+                  <h4 className="deal-name" onClick={() => {
+                    setSelectedCategories([product.category]);
+                    setCurrentPage('browse');
+                  }}>{product.name}</h4>
+                  <span className="deal-pack">{product.packSize}</span>
+                  <div className="price-pricing-flex" style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', marginTop: '8px' }}>
+                    <div className="price-stack" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                       <span className="retail-strike">MRP ₹{product.retailPrice}</span>
-                      <span className="wholesale-price">₹{product.wholesalePrice} <span className="ex-gst">ex. GST</span></span>
+                      <span className="wholesale-price" style={{ margin: 0 }}>₹{getTieredWholesalePrice(product, qty)} <span className="ex-gst">ex. GST</span></span>
                     </div>
+
+                    <div className="qty-selector-container" style={{ display: 'flex', width: 'fit-content' }}>
+                      <button 
+                        className="qty-btn"
+                        type="button"
+                        onClick={() => handleQuantityChange(product.id, (parseInt(qty) || 10) - 1)}
+                        disabled={(parseInt(qty) || 0) <= (product.moq || 10)}
+                        style={{ padding: '4px 8px' }}
+                      >
+                        -
+                      </button>
+                      <input 
+                        type="text" 
+                        className="qty-input"
+                        value={qty}
+                        onChange={(e) => {
+                          const valStr = e.target.value;
+                          const parsed = parseInt(valStr);
+                          handleQuantityChange(product.id, valStr === '' ? '' : (isNaN(parsed) ? valStr : parsed));
+                        }}
+                        onBlur={(e) => {
+                          const val = parseInt(e.target.value);
+                          const moqVal = product.moq || 10;
+                          if (isNaN(val) || val < moqVal) {
+                            handleQuantityChange(product.id, moqVal);
+                          } else {
+                            handleQuantityChange(product.id, val);
+                          }
+                        }}
+                        style={{ width: '30px', textAlign: 'center', border: 'none', fontWeight: 'bold' }}
+                      />
+                      <button 
+                        className="qty-btn"
+                        type="button"
+                        onClick={() => handleQuantityChange(product.id, (parseInt(qty) || 10) + 1)}
+                        style={{ padding: '4px 8px' }}
+                      >
+                        +
+                      </button>
+                    </div>
+
                     <button 
                       className="deal-add-btn" 
-                      onClick={() => onAddToCart(product, product.moq || 10)}
+                      onClick={() => onAddToCart(product, parseInt(qty) || product.moq || 10)}
                       disabled={(product.inventory !== undefined ? product.inventory : 100) <= 0}
-                      style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b' } : {}}
+                      style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b', padding: '8px', width: '100%' } : { padding: '8px', width: '100%' }}
                     >
-                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : 'Add to Cart'}
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : `Add to Cart (${qty})`}
                     </button>
-                  </div>
-                  <div style={{ fontSize: '11px', textAlign: 'left', marginTop: '2px' }}>
-                    {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? (
-                      <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>❌ Out of Stock</span>
-                    ) : (product.inventory !== undefined ? product.inventory : 100) < 10 ? (
-                      <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>left in stock : {product.inventory}</span>
-                    ) : (
-                      <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>✓ In Stock ({product.inventory !== undefined ? product.inventory : 100} packs)</span>
-                    )}
+
+                    <div style={{ fontSize: '11px', textAlign: 'left', marginTop: '2px' }}>
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? (
+                        <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>❌ Out of Stock</span>
+                      ) : (product.inventory !== undefined ? product.inventory : 100) < 10 ? (
+                        <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>left in stock : {product.inventory}</span>
+                      ) : (
+                        <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>✓ In Stock ({product.inventory !== undefined ? product.inventory : 100} packs)</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -290,6 +336,7 @@ export default function Home({
         <div className="products-grid-layout">
           {mostBoughtProducts.map((product) => {
             const margin = Math.round(((product.retailPrice - product.wholesalePrice) / product.retailPrice) * 100);
+            const qty = quantities[product.id] !== undefined ? quantities[product.id] : (product.moq || 10);
             return (
               <div key={product.id} className="product-card-unit">
                 <div className="bestseller-ribbon">Bestseller</div>
@@ -329,19 +376,59 @@ export default function Home({
                     )}
                   </div>
 
-                  <div className="price-checkout-row">
-                    <div className="price-stack">
+                  <div className="price-actions-flex-row" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                    <div className="price-stack" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                       <span className="mrp-txt">MRP ₹{product.retailPrice}</span>
-                      <span className="wholesale-deal-price">₹{product.wholesalePrice} <span className="ex-gst">ex. GST</span></span>
+                      <span className="wholesale-deal-price" style={{ margin: 0 }}>₹{getTieredWholesalePrice(product, qty)} <span className="ex-gst">ex. GST</span></span>
                     </div>
-                    
+
+                    <div className="qty-selector-container" style={{ display: 'flex', width: 'fit-content' }}>
+                      <button 
+                        className="qty-btn"
+                        type="button"
+                        onClick={() => handleQuantityChange(product.id, (parseInt(qty) || 10) - 1)}
+                        disabled={(parseInt(qty) || 0) <= (product.moq || 10)}
+                        style={{ padding: '4px 8px' }}
+                      >
+                        -
+                      </button>
+                      <input 
+                        type="text" 
+                        className="qty-input"
+                        value={qty}
+                        onChange={(e) => {
+                          const valStr = e.target.value;
+                          const parsed = parseInt(valStr);
+                          handleQuantityChange(product.id, valStr === '' ? '' : (isNaN(parsed) ? valStr : parsed));
+                        }}
+                        onBlur={(e) => {
+                          const val = parseInt(e.target.value);
+                          const moqVal = product.moq || 10;
+                          if (isNaN(val) || val < moqVal) {
+                            handleQuantityChange(product.id, moqVal);
+                          } else {
+                            handleQuantityChange(product.id, val);
+                          }
+                        }}
+                        style={{ width: '30px', textAlign: 'center', border: 'none', fontWeight: 'bold' }}
+                      />
+                      <button 
+                        className="qty-btn"
+                        type="button"
+                        onClick={() => handleQuantityChange(product.id, (parseInt(qty) || 10) + 1)}
+                        style={{ padding: '4px 8px' }}
+                      >
+                        +
+                      </button>
+                    </div>
+
                     <button 
-                      className="product-quick-add-btn" 
-                      onClick={() => onAddToCart(product, product.moq || 10)}
+                      className="add-to-cart-b2b-btn" 
+                      onClick={() => onAddToCart(product, parseInt(qty) || product.moq || 10)}
                       disabled={(product.inventory !== undefined ? product.inventory : 100) <= 0}
-                      style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b' } : {}}
+                      style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b', padding: '8px', width: '100%' } : { padding: '8px', width: '100%' }}
                     >
-                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : `Add Bulk (${product.moq || 10})`}
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : `Add Bulk (${qty})`}
                     </button>
                   </div>
 
