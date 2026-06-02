@@ -4,11 +4,11 @@ import { productsData } from './util/productsData';
 
 // Default Category Images Setup
 const defaultCategoryImages = {
-  "Chocolates & Candies": "/cadbury_category.jpg",
-  "Daily Use": "/mop_category.jpg",
+  "Chocolates & Candies": "cadbury_category.jpg",
+  "Daily Use": "mop_category.jpg",
   "Home Essentials": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=150&q=80",
-  "Preservatives": "/chips_category.jpg",
-  "Sweets & Namkeen": "/rasgulla_category.jpg",
+  "Preservatives": "chips_category.jpg",
+  "Sweets & Namkeen": "rasgulla_category.jpg",
   "Beverages": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80",
   "Grains & Masalas": "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80",
   "More": ""

@@ -60,35 +60,43 @@ export default function Home({
     .sort((a, b) => b.discountPercent - a.discountPercent)
     .slice(0, 4);
 
+  const resolveImgSrc = (src) => {
+    if (!src) return '';
+    if (src.startsWith('/') && !src.startsWith('http') && !src.startsWith('data:')) {
+      return src.slice(1);
+    }
+    return src;
+  };
+
   // Dynamic circular categories utilizing categoryImages state prop
   const categoriesList = [
     { 
       name: "Chocolates & Candies", 
-      icon: <img src={categoryImages["Chocolates & Candies"] || "/cadbury_category.jpg"} alt="Cadbury Chocolates" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Chocolates & Candies"] || "cadbury_category.jpg")} alt="Cadbury Chocolates" className="category-icon-img" /> 
     },
     { 
       name: "Daily Use", 
-      icon: <img src={categoryImages["Daily Use"] || "/mop_category.jpg"} alt="Daily needs cleaning mops" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Daily Use"] || "mop_category.jpg")} alt="Daily needs cleaning mops" className="category-icon-img" /> 
     },
     { 
       name: "Home Essentials", 
-      icon: <img src={categoryImages["Home Essentials"] || "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=150&q=80"} alt="Home Curtains" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Home Essentials"] || "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=150&q=80")} alt="Home Curtains" className="category-icon-img" /> 
     },
     { 
       name: "Preservatives", 
-      icon: <img src={categoryImages["Preservatives"] || "/chips_category.jpg"} alt="Chips snacks" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Preservatives"] || "chips_category.jpg")} alt="Chips snacks" className="category-icon-img" /> 
     },
     { 
       name: "Sweets & Namkeen", 
-      icon: <img src={categoryImages["Sweets & Namkeen"] || "/rasgulla_category.jpg"} alt="Sweets Rasgulla" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Sweets & Namkeen"] || "rasgulla_category.jpg")} alt="Sweets Rasgulla" className="category-icon-img" /> 
     },
     { 
       name: "Beverages", 
-      icon: <img src={categoryImages["Beverages"] || "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80"} alt="Coke Beverage" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Beverages"] || "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80")} alt="Coke Beverage" className="category-icon-img" /> 
     },
     { 
       name: "Grains & Masalas", 
-      icon: <img src={categoryImages["Grains & Masalas"] || "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80"} alt="Grains Atta" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80")} alt="Grains Atta" className="category-icon-img" /> 
     },
     { 
       name: "More", 
