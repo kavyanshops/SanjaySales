@@ -187,9 +187,9 @@ export default function Navbar({
             <span className="text-muted text-sm">GST invoice benefits on all bulk purchases. Welcome to Sanjay Sales!</span>
           </div>
           <div className="top-bar-right">
-            <a href="#help" onClick={(e) => { e.preventDefault(); alert("Help Center: Contact us at support@sanjaysales.com or call 1800-XXX-XXXX"); }} className="top-link">Support</a>
+            <a href="#help" onClick={(e) => { e.preventDefault(); alert("Customer Support:\nPhone: +917496865205\nEmail: wholesale@sanjaysales.com\nHours: Mon - Sat: 9:00 AM - 5:00 PM"); }} className="top-link">Support</a>
             <span className="divider">|</span>
-            <a href="#store" onClick={(e) => { e.preventDefault(); alert("Our Hubs: Operating out of Mumbai, Delhi, Ahmedabad, and Bangalore Wholesale Hubs."); }} className="top-link">Wholesale Hubs</a>
+            <a href="#store" onClick={(e) => { e.preventDefault(); alert("Operational in Jhajjar, Delhi only. Operational in other cities soon."); }} className="top-link">Wholesale Hubs</a>
           </div>
         </div>
       </div>

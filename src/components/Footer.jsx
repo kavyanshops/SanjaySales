@@ -49,7 +49,7 @@ export default function Footer() {
           <div className="footer-col contact-info">
             <h4>Corporate Desk</h4>
             <p className="contact-item">
-              <strong>Address:</strong> Sanjay Sales B2B Depot, Sector 4, Kopar Khairane, Navi Mumbai, MH - 400709
+              <strong>Address:</strong> Sanjay Sales, Sabzi mandi, Jhajjar, Haryana Pincode: 124103
             </p>
             <p className="contact-item">
               <strong>Email:</strong> wholesale@sanjaysales.com
