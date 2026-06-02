@@ -36,7 +36,11 @@ export default function App() {
   // --- Dynamic B2B Catalog and Settings States ---
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('ss_products');
-    return saved ? JSON.parse(saved) : productsData;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed.map(p => ({ ...p, inventory: p.inventory !== undefined ? p.inventory : 100 }));
+    }
+    return productsData.map(p => ({ ...p, inventory: 100 }));
   });
 
   const [categoryImages, setCategoryImages] = useState(() => {
@@ -132,7 +136,8 @@ export default function App() {
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === 'ss_products') {
-        setProducts(e.newValue ? JSON.parse(e.newValue) : productsData);
+        const parsed = e.newValue ? JSON.parse(e.newValue) : productsData;
+        setProducts(parsed.map(p => ({ ...p, inventory: p.inventory !== undefined ? p.inventory : 100 })));
       }
       if (e.key === 'ss_category_images') {
         setCategoryImages(e.newValue ? JSON.parse(e.newValue) : defaultCategoryImages);
@@ -202,6 +207,18 @@ export default function App() {
 
   const handleAddOrder = (newOrder) => {
     setOrders((prev) => [newOrder, ...prev]);
+    
+    // Decrement stock sizes for ordered items
+    setProducts((prevProducts) =>
+      prevProducts.map((p) => {
+        const orderedItem = newOrder.items?.find((item) => item.id === p.id);
+        if (orderedItem) {
+          const currentStock = p.inventory !== undefined ? p.inventory : 100;
+          return { ...p, inventory: Math.max(0, currentStock - orderedItem.quantity) };
+        }
+        return p;
+      })
+    );
   };
 
   const handleAddAddress = (newAddr) => {

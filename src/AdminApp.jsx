@@ -18,12 +18,21 @@ export default function AdminApp() {
   // --- Dynamic B2B Catalog and Settings States ---
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('ss_products');
-    return saved ? JSON.parse(saved) : productsData;
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed.map(p => ({ ...p, inventory: p.inventory !== undefined ? p.inventory : 100 }));
+    }
+    return productsData.map(p => ({ ...p, inventory: 100 }));
   });
 
   const [categoryImages, setCategoryImages] = useState(() => {
     const saved = localStorage.getItem('ss_category_images');
     return saved ? JSON.parse(saved) : defaultCategoryImages;
+  });
+
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem('ss_orders');
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Sync catalog database to LocalStorage with try/catch to protect against browser storage limits
@@ -55,10 +64,14 @@ export default function AdminApp() {
   useEffect(() => {
     const handleStorageChange = (e) => {
       if (e.key === 'ss_products') {
-        setProducts(e.newValue ? JSON.parse(e.newValue) : productsData);
+        const parsed = e.newValue ? JSON.parse(e.newValue) : productsData;
+        setProducts(parsed.map(p => ({ ...p, inventory: p.inventory !== undefined ? p.inventory : 100 })));
       }
       if (e.key === 'ss_category_images') {
         setCategoryImages(e.newValue ? JSON.parse(e.newValue) : defaultCategoryImages);
+      }
+      if (e.key === 'ss_orders') {
+        setOrders(e.newValue ? JSON.parse(e.newValue) : []);
       }
     };
     window.addEventListener('storage', handleStorageChange);
@@ -117,6 +130,7 @@ export default function AdminApp() {
       <AdminPortal 
         products={products}
         categoryImages={categoryImages}
+        orders={orders}
         onAddProduct={handleAddProduct}
         onUpdateProduct={handleUpdateProduct}
         onDeleteProduct={handleDeleteProduct}

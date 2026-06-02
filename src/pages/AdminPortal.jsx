@@ -4,6 +4,7 @@ import { allCategories } from '../util/productsData';
 export default function AdminPortal({ 
   products, 
   categoryImages, 
+  orders = [],
   onAddProduct, 
   onUpdateProduct, 
   onDeleteProduct, 
@@ -12,7 +13,7 @@ export default function AdminPortal({
   onResetCatalog,
   setCurrentPage 
 }) {
-  const [activeTab, setActiveTab] = useState('products'); // 'products', 'categories', 'bulk'
+  const [activeTab, setActiveTab] = useState('products'); // 'products', 'categories', 'bulk', 'orders'
   
   // Product Form states
   const [editingId, setEditingId] = useState(null); // null if adding
@@ -25,6 +26,7 @@ export default function AdminPortal({
   const [imageUrl, setImageUrl] = useState('');
   const [isMostBought, setIsMostBought] = useState(false);
   const [moq, setMoq] = useState('10');
+  const [inventory, setInventory] = useState('100');
   const [errors, setErrors] = useState({});
   const [actionSuccess, setActionSuccess] = useState('');
 
@@ -72,6 +74,7 @@ export default function AdminPortal({
     setImageUrl(product.imageUrl);
     setIsMostBought(product.isMostBought || false);
     setMoq(product.moq ? product.moq.toString() : '10');
+    setInventory(product.inventory !== undefined ? product.inventory.toString() : '100');
     
     // Auto-detect image source type
     if (product.imageUrl && product.imageUrl.startsWith('data:')) {
@@ -101,6 +104,7 @@ export default function AdminPortal({
     setIsMostBought(false);
     setImageSourceType('link');
     setMoq('10');
+    setInventory('100');
     setErrors({});
   };
 
@@ -115,10 +119,13 @@ export default function AdminPortal({
     const retail = parseFloat(retailPrice);
     const wholesale = parseFloat(wholesalePrice);
     const minOrderQty = parseInt(moq);
+    const stockQty = parseInt(inventory);
+
     if (isNaN(retail) || retail <= 0) tempErrors.retailPrice = "Enter valid retail price";
     if (isNaN(wholesale) || wholesale <= 0) tempErrors.wholesalePrice = "Enter valid wholesale price";
     if (wholesale >= retail) tempErrors.wholesalePrice = "Wholesale price must be lower than MRP";
     if (isNaN(minOrderQty) || minOrderQty <= 0) tempErrors.moq = "Enter valid MOQ (at least 1)";
+    if (isNaN(stockQty) || stockQty < 0) tempErrors.inventory = "Enter valid inventory quantity (0 or more)";
 
     if (!imageUrl) tempErrors.imageUrl = "Product image file or web URL is required";
 
@@ -135,6 +142,7 @@ export default function AdminPortal({
       imageUrl,
       isMostBought,
       moq: minOrderQty || 10,
+      inventory: stockQty >= 0 ? stockQty : 100,
       rating: editingId ? (products.find(p => p.id === editingId)?.rating || 4.5) : 4.5,
       reviewsCount: editingId ? (products.find(p => p.id === editingId)?.reviewsCount || 100) : 100
     };
@@ -159,6 +167,7 @@ export default function AdminPortal({
     setIsMostBought(false);
     setImageSourceType('link');
     setMoq('10');
+    setInventory('100');
 
     setTimeout(() => setActionSuccess(''), 2500);
   };
@@ -250,6 +259,12 @@ export default function AdminPortal({
         >
           Bulk Rates Adjuster
         </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
+          onClick={() => setActiveTab('orders')}
+        >
+          Orders Placed Log ({orders.length})
+        </button>
       </div>
 
       {/* SUCCESS POPUP MESSAGE */}
@@ -323,17 +338,31 @@ export default function AdminPortal({
                   {errors.packSize && <span className="input-error-msg">{errors.packSize}</span>}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="prod-moq">Minimum Order Quantity (MOQ) *</label>
-                  <input 
-                    type="number" 
-                    id="prod-moq"
-                    value={moq}
-                    onChange={(e) => setMoq(e.target.value)}
-                    placeholder="e.g. 10"
-                    className={errors.moq ? 'error-input' : ''}
-                  />
-                  {errors.moq && <span className="input-error-msg">{errors.moq}</span>}
+                <div className="form-group-row-flex">
+                  <div className="form-group">
+                    <label htmlFor="prod-moq">Minimum Order Quantity (MOQ) *</label>
+                    <input 
+                      type="number" 
+                      id="prod-moq"
+                      value={moq}
+                      onChange={(e) => setMoq(e.target.value)}
+                      placeholder="e.g. 10"
+                      className={errors.moq ? 'error-input' : ''}
+                    />
+                    {errors.moq && <span className="input-error-msg">{errors.moq}</span>}
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="prod-inv">Stock Inventory (Packs) *</label>
+                    <input 
+                      type="number" 
+                      id="prod-inv"
+                      value={inventory}
+                      onChange={(e) => setInventory(e.target.value)}
+                      placeholder="e.g. 100"
+                      className={errors.inventory ? 'error-input' : ''}
+                    />
+                    {errors.inventory && <span className="input-error-msg">{errors.inventory}</span>}
+                  </div>
                 </div>
 
                 <div className="form-group-row-flex">
@@ -470,6 +499,7 @@ export default function AdminPortal({
                         <th className="text-right">MRP</th>
                         <th className="text-right">Dist. Rate</th>
                         <th className="text-center">MOQ</th>
+                        <th className="text-center">Stock</th>
                         <th className="text-center">Action</th>
                       </tr>
                     </thead>
@@ -489,6 +519,9 @@ export default function AdminPortal({
                           <td className="text-right">₹{prod.retailPrice}</td>
                           <td className="text-right font-bold">₹{prod.wholesalePrice}</td>
                           <td className="text-center">{prod.moq || 10}</td>
+                          <td className="text-center font-bold" style={{ color: (prod.inventory !== undefined ? prod.inventory : 100) <= 0 ? 'var(--color-danger)' : (prod.inventory !== undefined ? prod.inventory : 100) < 30 ? 'var(--color-warning)' : 'var(--color-success)' }}>
+                            {prod.inventory !== undefined ? prod.inventory : 100}
+                          </td>
                           <td className="text-center">
                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                               <button 
@@ -511,7 +544,7 @@ export default function AdminPortal({
                       ))}
                       {filteredProducts.length === 0 && (
                         <tr>
-                          <td colSpan={6} className="text-center" style={{ padding: '24px 0', color: 'var(--color-text-muted)' }}>
+                          <td colSpan={7} className="text-center" style={{ padding: '24px 0', color: 'var(--color-text-muted)' }}>
                             No active listings match your filters.
                           </td>
                         </tr>
@@ -538,10 +571,11 @@ export default function AdminPortal({
                         <div>
                           Segment: <span className="gst-info-bubble">{prod.category}</span>
                         </div>
-                        <div style={{ display: 'flex', gap: '8px' }}>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                           <span>MRP: <strong>₹{prod.retailPrice}</strong></span>
                           <span>Rate: <strong style={{ color: 'var(--color-primary)' }}>₹{prod.wholesalePrice}</strong></span>
                           <span>MOQ: <strong>{prod.moq || 10}</strong></span>
+                          <span>Stock: <strong style={{ color: (prod.inventory !== undefined ? prod.inventory : 100) <= 0 ? 'var(--color-danger)' : (prod.inventory !== undefined ? prod.inventory : 100) < 30 ? 'var(--color-warning)' : 'var(--color-success)' }}>{prod.inventory !== undefined ? prod.inventory : 100}</strong></span>
                         </div>
                       </div>
 
@@ -672,6 +706,75 @@ export default function AdminPortal({
             </button>
           </div>
 
+        </div>
+      )}
+
+      {/* TAB 4: INCOMING ORDERS LOG */}
+      {activeTab === 'orders' && (
+        <div className="summary-card mt-6">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
+            <div>
+              <h3 style={{ margin: 0 }}>Incoming Wholesale Order Shipments</h3>
+              <p className="gst-disclaimer">Review compliance tax invoices and dispatch details for all placed orders.</p>
+            </div>
+            <div style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--color-primary)' }}>
+              Total Placed Orders: {orders.length}
+            </div>
+          </div>
+          <div className="divider-card"></div>
+
+          {orders.length === 0 ? (
+            <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: '15px', fontWeight: '600', margin: 0 }}>No orders have been placed yet.</p>
+              <p style={{ fontSize: '13px', margin: '4px 0 0' }}>Orders checked out on the shopfront will populate here automatically.</p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {orders.map((order) => {
+                const itemsCount = order.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+                return (
+                  <div key={order.id} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)', padding: '16px', backgroundColor: '#f8fafc' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+                      <div style={{ textAlign: 'left' }}>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--color-text-muted)', fontWeight: 'bold' }}>ORDER ID: {order.id}</span>
+                        <strong style={{ display: 'block', fontSize: '14px', marginTop: '2px' }}>
+                          Placed on: {new Date(order.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </strong>
+                        <span style={{ display: 'block', fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+                          Client Business: <strong>{order.address?.businessName || order.address?.name}</strong> | Phone: <strong>{order.address?.phone}</strong>
+                        </span>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{ display: 'block', fontSize: '10px', color: 'var(--color-text-muted)', fontWeight: 'bold' }}>BILLING AMOUNT</span>
+                        <span style={{ display: 'block', fontSize: '18px', fontWeight: '800', color: 'var(--color-primary)' }}>₹{order.grandTotal.toLocaleString('en-IN')}</span>
+                        <span className="invoice-status-paid" style={{ display: 'inline-block', backgroundColor: 'rgba(16, 185, 129, 0.1)', color: 'var(--color-success)', padding: '1px 6px', borderRadius: '4px', fontWeight: '700', fontSize: '10px', marginTop: '4px' }}>PAID</span>
+                      </div>
+                    </div>
+
+                    <div style={{ borderTop: '1px dashed var(--color-border)', marginTop: '12px', paddingTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ fontSize: '12px', textAlign: 'left' }}>
+                        <strong>Delivery Destination:</strong> {order.address?.addressLine}, {order.address?.city}, {order.address?.state} - {order.address?.pincode}
+                      </div>
+
+                      <div style={{ marginTop: '8px' }}>
+                        <strong style={{ display: 'block', fontSize: '12px', textAlign: 'left', marginBottom: '4px' }}>Items Summary ({itemsCount} units):</strong>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {order.items?.map((item, idx) => (
+                            <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', backgroundColor: 'white', padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--color-border)' }}>
+                              <span style={{ textAlign: 'left' }}>
+                                <strong>{item.name}</strong> ({item.packSize}) x {item.quantity} packs
+                              </span>
+                              <strong>₹{(item.wholesalePrice * item.quantity).toLocaleString('en-IN')}</strong>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

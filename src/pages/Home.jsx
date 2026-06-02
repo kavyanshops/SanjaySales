@@ -190,14 +190,30 @@ export default function Home({
                   setCurrentPage('browse');
                 }}>{product.name}</h4>
                 <span className="deal-pack">{product.packSize}</span>
-                <div className="price-pricing-flex">
-                  <div className="deal-prices">
-                    <span className="retail-strike">MRP ₹{product.retailPrice}</span>
-                    <span className="wholesale-price">₹{product.wholesalePrice} <span className="ex-gst">ex. GST</span></span>
+                <div className="price-pricing-flex" style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <div className="deal-prices">
+                      <span className="retail-strike">MRP ₹{product.retailPrice}</span>
+                      <span className="wholesale-price">₹{product.wholesalePrice} <span className="ex-gst">ex. GST</span></span>
+                    </div>
+                    <button 
+                      className="deal-add-btn" 
+                      onClick={() => onAddToCart(product, product.moq || 10)}
+                      disabled={(product.inventory !== undefined ? product.inventory : 100) <= 0}
+                      style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b' } : {}}
+                    >
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : 'Add to Cart'}
+                    </button>
                   </div>
-                  <button className="deal-add-btn" onClick={() => onAddToCart(product, product.moq || 10)}>
-                    Add to Cart
-                  </button>
+                  <div style={{ fontSize: '11px', textAlign: 'left', marginTop: '2px' }}>
+                    {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? (
+                      <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>❌ Out of Stock</span>
+                    ) : (product.inventory !== undefined ? product.inventory : 100) < 30 ? (
+                      <span style={{ color: 'var(--color-warning)', fontWeight: 'bold' }}>⚠️ Only {product.inventory} packs left!</span>
+                    ) : (
+                      <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>✓ In Stock ({product.inventory !== undefined ? product.inventory : 100} packs)</span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

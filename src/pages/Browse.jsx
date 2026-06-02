@@ -312,12 +312,25 @@ export default function Browse({
                       </div>
                     </div>
 
+                    {/* Stock Status Indicator */}
+                    <div style={{ marginTop: '4px', marginBottom: '8px', fontSize: '12px', textAlign: 'left' }}>
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? (
+                        <span style={{ color: 'var(--color-danger)', fontWeight: '700' }}>❌ Out of Stock</span>
+                      ) : (product.inventory !== undefined ? product.inventory : 100) < 30 ? (
+                        <span style={{ color: 'var(--color-warning)', fontWeight: '700' }}>⚠️ Only {product.inventory} bulk packs left!</span>
+                      ) : (
+                        <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>✓ In Stock ({product.inventory !== undefined ? product.inventory : 100} packs)</span>
+                      )}
+                    </div>
+
                     {/* Add to Cart button */}
                     <button 
                       className="add-to-cart-b2b-btn"
                       onClick={() => onAddToCart(product, qty)}
+                      disabled={(product.inventory !== undefined ? product.inventory : 100) <= 0}
+                      style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b' } : {}}
                     >
-                      Add Bulk Pack ({qty})
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : `Add Bulk Pack (${qty})`}
                     </button>
 
                   </div>
