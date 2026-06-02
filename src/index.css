@@ -1111,10 +1111,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .categories-row-flex {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 16px 12px;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 16px 8px;
   padding-bottom: 12px;
-  max-width: 980px;
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -1133,8 +1133,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .category-icon-wrapper {
-  width: 130px;
-  height: 130px;
+  width: 100%;
+  max-width: 130px;
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
   background-color: #ffffff;
   border: 2px solid var(--color-border);
@@ -2794,8 +2796,8 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .categories-row-flex {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px 6px;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px 4px;
   }
 
   .category-circle-card {
@@ -2803,8 +2805,20 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .category-icon-wrapper {
-    width: 70px;
-    height: 70px;
+    width: 100%;
+    max-width: 54px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 6px;
+  }
+
+  .category-circle-label {
+    font-size: 9px;
+    max-width: 100%;
+  }
+
+  .category-more-text {
+    font-size: 9px;
   }
 
   /* Bestsellers and Deal grid sizing */
