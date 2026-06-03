@@ -122,7 +122,7 @@ export default function Home({
   const categoriesList = [
     { 
       name: "Chocolates & Candies", 
-      icon: <img src={resolveImgSrc(categoryImages["Chocolates & Candies"] || "cadbury_category.jpg")} alt="Cadbury Chocolates" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Chocolates & Candies"] || "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Cadbury_logo_new.jpg/500px-Cadbury_logo_new.jpg")} alt="Cadbury Chocolates" className="category-icon-img" /> 
     },
     { 
       name: "Daily Use", 
@@ -168,7 +168,7 @@ export default function Home({
 
   const brandLogos = [
     { name: "Amul", logo: "amul.jpg" },
-    { name: "Cadbury", logo: "cadbury.jpeg" },
+    { name: "Cadbury", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Cadbury_logo_new.jpg/500px-Cadbury_logo_new.jpg" },
     { name: "Haldiram's", logo: "haldirams.png" },
     { name: "Dettol", logo: "dettol.jpeg" },
     { name: "Unilever", logo: "unilever.png" },
