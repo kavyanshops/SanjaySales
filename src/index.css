@@ -2763,6 +2763,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
+  .main-nav-flex {
+    justify-content: space-between;
+    gap: 12px;
+  }
+
   /* Search input header shrinking and swapping to icon drawer */
   .search-form-relative-container {
     display: none; /* hide main desktop search input */
@@ -2770,6 +2775,7 @@ h1, h2, h3, h4, h5, h6 {
   
   .mobile-search-trigger-btn {
     display: block; /* show mobile search magnifying glass icon */
+    margin-left: auto; /* push search icon next to action buttons on the right corner */
   }
   
   .delivery-location-widget {
