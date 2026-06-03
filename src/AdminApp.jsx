@@ -6,14 +6,11 @@ import { productsData } from './util/productsData';
 const defaultCategoryImages = {
   "Chocolates & Candies": "cadbury_category.jpg",
   "Daily Use": "mop_category.jpg",
-  "Home Essentials": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=150&q=80",
+  "Home Essentials": "https://cdn.brandfetch.io/domain/springwel.in/fallback/lettermark/theme/dark/h/400/w/400/icon?c=1bfwsmEH20zzEfSNTed",
   "Preservatives": "chips_category.jpg",
   "Sweets & Namkeen": "rasgulla_category.jpg",
-  "Beverages": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80",
-  "Grains & Masalas": "itc.png",
-  "Fresh & Dairy": "https://images.unsplash.com/photo-1528750955906-c8b4a3952f2d?auto=format&fit=crop&w=150&q=80",
-  "Snacks & Biscuits": "https://images.unsplash.com/photo-1558961312-50a49c93acfe?auto=format&fit=crop&w=150&q=80",
-  "Cosmetics & Hygiene": "unilever.png",
+  "Beverages": "https://www.logodesignlove.com/wp-content/uploads/2021/07/coca-cola-logo-arden-square-01.jpg",
+  "Grains & Masalas": "https://prithvienterprises.co.in/cdn/shop/collections/Aashirvaad_Logo.png?v=1746877542&width=750",
   "More": ""
 };
 

@@ -103,7 +103,7 @@ export default function Home({
     },
     { 
       name: "Home Essentials", 
-      icon: <img src={resolveImgSrc(categoryImages["Home Essentials"] || "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=150&q=80")} alt="Home Curtains" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Home Essentials"] || "https://cdn.brandfetch.io/domain/springwel.in/fallback/lettermark/theme/dark/h/400/w/400/icon?c=1bfwsmEH20zzEfSNTed")} alt="Home Curtains" className="category-icon-img" /> 
     },
     { 
       name: "Preservatives", 
@@ -115,23 +115,11 @@ export default function Home({
     },
     { 
       name: "Beverages", 
-      icon: <img src={resolveImgSrc(categoryImages["Beverages"] || "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80")} alt="Coke Beverage" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Beverages"] || "https://www.logodesignlove.com/wp-content/uploads/2021/07/coca-cola-logo-arden-square-01.jpg")} alt="Coke Beverage" className="category-icon-img" /> 
     },
     { 
       name: "Grains & Masalas", 
-      icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "itc.png")} alt="Grains Atta" className="category-icon-img" /> 
-    },
-    { 
-      name: "Fresh & Dairy", 
-      icon: <img src={resolveImgSrc(categoryImages["Fresh & Dairy"] || "https://images.unsplash.com/photo-1528750955906-c8b4a3952f2d?auto=format&fit=crop&w=150&q=80")} alt="Fresh & Dairy" className="category-icon-img" /> 
-    },
-    { 
-      name: "Snacks & Biscuits", 
-      icon: <img src={resolveImgSrc(categoryImages["Snacks & Biscuits"] || "https://images.unsplash.com/photo-1558961312-50a49c93acfe?auto=format&fit=crop&w=150&q=80")} alt="Snacks & Biscuits" className="category-icon-img" /> 
-    },
-    { 
-      name: "Cosmetics & Hygiene", 
-      icon: <img src={resolveImgSrc(categoryImages["Cosmetics & Hygiene"] || "unilever.png")} alt="Cosmetics & Hygiene" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "https://prithvienterprises.co.in/cdn/shop/collections/Aashirvaad_Logo.png?v=1746877542&width=750")} alt="Grains Atta" className="category-icon-img" /> 
     },
     { 
       name: "More", 
