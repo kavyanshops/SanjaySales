@@ -15,7 +15,10 @@ const defaultCategoryImages = {
   "Preservatives": "chips_category.jpg",
   "Sweets & Namkeen": "rasgulla_category.jpg",
   "Beverages": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80",
-  "Grains & Masalas": "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80",
+  "Grains & Masalas": "itc.png",
+  "Fresh & Dairy": "https://images.unsplash.com/photo-1528750955906-c8b4a3952f2d?auto=format&fit=crop&w=150&q=80",
+  "Snacks & Biscuits": "https://images.unsplash.com/photo-1558961312-50a49c93acfe?auto=format&fit=crop&w=150&q=80",
+  "Cosmetics & Hygiene": "unilever.png",
   "More": ""
 };
 

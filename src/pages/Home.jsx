@@ -117,7 +117,7 @@ export default function Home({
     },
     { 
       name: "Grains & Masalas", 
-      icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80")} alt="Grains Atta" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "itc.png")} alt="Grains Atta" className="category-icon-img" /> 
     },
     { 
       name: "Fresh & Dairy", 
@@ -129,7 +129,7 @@ export default function Home({
     },
     { 
       name: "Cosmetics & Hygiene", 
-      icon: <img src={resolveImgSrc(categoryImages["Cosmetics & Hygiene"] || "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=150&q=80")} alt="Cosmetics & Hygiene" className="category-icon-img" /> 
+      icon: <img src={resolveImgSrc(categoryImages["Cosmetics & Hygiene"] || "unilever.png")} alt="Cosmetics & Hygiene" className="category-icon-img" /> 
     },
     { 
       name: "More", 
@@ -138,13 +138,13 @@ export default function Home({
   ];
 
   const brandLogos = [
-    { name: "Amul", logo: "amul_logo.jpg" },
-    { name: "Cadbury", logo: "cadbury_logo.jpg" },
-    { name: "Haldiram's", logo: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=150&q=80" },
-    { name: "Dettol", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Dettol_logo.svg/150px-Dettol_logo.svg.png" },
-    { name: "Nestle", logo: "https://images.unsplash.com/photo-1582201942922-47e5c3e490fc?auto=format&fit=crop&w=150&q=80" },
-    { name: "Coca-Cola", logo: "cocacola_logo.png" },
-    { name: "Colgate", logo: "colgate_logo.png" },
+    { name: "Amul", logo: "amul.jpg" },
+    { name: "Cadbury", logo: "cadbury.jpeg" },
+    { name: "Haldiram's", logo: "haldirams.png" },
+    { name: "Dettol", logo: "dettol.jpeg" },
+    { name: "Unilever", logo: "unilever.png" },
+    { name: "Coca-Cola", logo: "coke.jpeg" },
+    { name: "Colgate", logo: "colgate.jpeg" },
     { name: "More", logo: "" }
   ];
 
@@ -323,7 +323,7 @@ export default function Home({
               ) : (
                 <img 
                   src={resolveImgSrc(brand.logo)} 
-                  alt={`${brand.name} logo`} 
+                  alt={`${brand.name}`} 
                   style={{ width: '60px', height: '60px', borderRadius: '8px', objectFit: 'cover', marginBottom: '8px' }} 
                 />
               )}

@@ -713,7 +713,7 @@ export default function AdminPortal({
                       <img 
                         src={localCategoryImages[catName]} 
                         alt="" 
-                        style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--color-border)', objectFit: 'cover' }} 
+                        style={{ width: '40px', height: '40px', borderRadius: '4px', border: '1px solid var(--color-border)', objectFit: 'cover' }} 
                       />
                       <input 
                         type="text" 
