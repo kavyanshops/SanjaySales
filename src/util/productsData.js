@@ -12,7 +12,7 @@ export const productsData = [
     reviewsCount: 342,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1549007994-cb92ca817bc7?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/619XPjMyesL.jpg"
   },
   {
     id: 2,
@@ -26,7 +26,7 @@ export const productsData = [
     reviewsCount: 215,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1582201942922-47e5c3e490fc?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/81NU1QjnWoL.jpg"
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ export const productsData = [
     reviewsCount: 188,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/815LpQVyPpL.jpg"
   },
   {
     id: 4,
@@ -54,7 +54,7 @@ export const productsData = [
     reviewsCount: 95,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1581798459219-318e76aecc7b?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/l/40324641_1-parle-kaccha-mango-bite.jpg"
   },
 
   // 2. Daily Use
@@ -70,7 +70,7 @@ export const productsData = [
     reviewsCount: 512,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://silverspotindia.com/wp-content/uploads/2023/10/Colgate-Strong-Teeth-Strong-you-Calcium-Boost-Toothpaste-Saver-Pack-500-g-1.jpg"
   },
   {
     id: 6,
@@ -84,7 +84,7 @@ export const productsData = [
     reviewsCount: 418,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/61BacHKoINL._AC_UF1000,1000_QL80_.jpg"
   },
   {
     id: 7,
@@ -98,7 +98,7 @@ export const productsData = [
     reviewsCount: 298,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1607006342411-91f15712cfa6?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://assets.ajio.com/medias/sys_master/root/20230208/7JcX/63e3bd46aeb26924e360c07e/-473Wx593H-4908670700-multi-MODEL.jpg"
   },
 
   // 3. Home Essentials
@@ -114,7 +114,7 @@ export const productsData = [
     reviewsCount: 689,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1610557892470-76d74cd120a1?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/619HRPW3elL._AC_UF1000,1000_QL80_.jpg"
   },
   {
     id: 9,
@@ -128,7 +128,7 @@ export const productsData = [
     reviewsCount: 720,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/61j+zu68oTL.jpg"
   },
   {
     id: 10,
@@ -142,7 +142,7 @@ export const productsData = [
     reviewsCount: 310,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1622060873533-13386899d52b?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/51rhw--KcDL.jpg"
   },
 
   // 4. Preservatives
@@ -158,7 +158,7 @@ export const productsData = [
     reviewsCount: 220,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1607305387299-a3d9611cd46f?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.mystore.in/s/62ea2c599d1398fa16dbae0a/67af57552520cae574fc6e48/8901030921780_1-640x640.png"
   },
   {
     id: 12,
@@ -172,7 +172,7 @@ export const productsData = [
     reviewsCount: 148,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1622262608242-7db5e4d29373?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/l/265943_6-mothers-recipe-pickle-mango.jpg"
   },
   {
     id: 13,
@@ -186,7 +186,7 @@ export const productsData = [
     reviewsCount: 260,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1570197571499-166b36435e9f?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/xl/100004128_14-dr-oetker-funfoods-veg-mayonnaise-garlic.jpg"
   },
 
   // 5. Sweets & Namkeen
@@ -202,7 +202,7 @@ export const productsData = [
     reviewsCount: 890,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1613919113640-25732ec5e61f?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/l/40113477_2-haldirams-namkeen-bhujia-del-horeca.jpg"
   },
   {
     id: 15,
@@ -216,7 +216,7 @@ export const productsData = [
     reviewsCount: 423,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.haldirams.com/media/catalog/product/cache/71134970afb779eb7860339989626b7e/g/j/gj-500g-front-1.jpg"
   },
   {
     id: 16,
@@ -230,7 +230,7 @@ export const productsData = [
     reviewsCount: 395,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1566478989037-eec170784d24?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/71LyKlizpuL.jpg"
   },
 
   // 6. Beverages
@@ -246,7 +246,7 @@ export const productsData = [
     reviewsCount: 1120,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/l/100401160_11-coca-cola-soft-drink-original-taste.jpg"
   },
   {
     id: 18,
@@ -255,12 +255,12 @@ export const productsData = [
     category: "Beverages",
     retailPrice: 125,
     wholesalePrice: 104,
-    packSize: "Tray of 24 cans x 250ml",
+    packSize: "Tray of 24 cans x 350ml",
     rating: 4.6,
     reviewsCount: 560,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1622543953490-0b70039a43f9?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/61eYU4xqDcL._AC_UF894,1000_QL80_.jpg"
   },
   {
     id: 19,
@@ -274,7 +274,7 @@ export const productsData = [
     reviewsCount: 290,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.tatanutrikorner.com/cdn/shop/files/61ZjHgCnGuL._SL1000.jpg?v=1745569622&width=1445"
   },
 
   // 7. Grains & Masalas
@@ -290,7 +290,7 @@ export const productsData = [
     reviewsCount: 923,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/l/204629_23-aashirvaad-select-atta.jpg"
   },
   {
     id: 21,
@@ -304,7 +304,7 @@ export const productsData = [
     reviewsCount: 480,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/61amF3+1wWL._AC_UF894,1000_QL80_.jpg"
   },
   {
     id: 22,
@@ -318,7 +318,7 @@ export const productsData = [
     reviewsCount: 312,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/81HPTcGyDdL._AC_UF894,1000_QL80_.jpg"
   },
 
   // 8. Fresh & Dairy
@@ -334,7 +334,7 @@ export const productsData = [
     reviewsCount: 1045,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://assets.hyperpure.com/data/images/products/03669d1e950fd601fd7963fc6827201e.jpg"
   },
   {
     id: 24,
@@ -348,7 +348,7 @@ export const productsData = [
     reviewsCount: 654,
     isMostBought: true,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1528750955906-c8b4a3952f2d?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://m.media-amazon.com/images/I/71vM-znOuDL._AC_UF894,1000_QL80_.jpg"
   },
   {
     id: 25,
@@ -362,7 +362,7 @@ export const productsData = [
     reviewsCount: 310,
     isMostBought: false,
     moq: 10,
-    imageUrl: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?auto=format&fit=crop&w=600&q=80"
+    imageUrl: "https://www.bbassets.com/media/uploads/p/l/296470_8-mother-dairy-paneer-fresh.jpg"
   }
 ];
 
