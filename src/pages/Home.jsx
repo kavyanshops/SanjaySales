@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StarIcon, ChevronRightIcon } from '../components/Icons';
 import { getTieredWholesalePrice } from '../util/productsData';
+import amul from '../assets/amul.jpg';
 
 export default function Home({ 
   products,            // dynamic state passed from App.jsx
@@ -120,6 +121,18 @@ export default function Home({
     { 
       name: "Grains & Masalas", 
       icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "https://prithvienterprises.co.in/cdn/shop/collections/Aashirvaad_Logo.png?v=1746877542&width=750")} alt="Grains Atta" className="category-icon-img" /> 
+    },
+    { 
+      name: "Fresh & Dairy", 
+      icon: <img src={resolveImgSrc(categoryImages["Fresh & Dairy"] || "https://animationvisarts.com/wp-content/uploads/2023/12/Frame-32-6.png")} alt="Fresh & Dairy" className="category-icon-img" /> 
+    },
+    { 
+      name: "Snacks & Biscuits", 
+      icon: <img src={resolveImgSrc(categoryImages["Snacks & Biscuits"] || "https://images.yourstory.com/cs/images/companies/4146603810349766400073541079337822789304320o-1611498760663.png?fm=auto&ar=1%3A1&mode=fill&fill=solid&fill-color=fff&format=auto&w=1920&q=85")} alt="Snacks & Biscuits" className="category-icon-img" /> 
+    },
+    { 
+      name: "Cosmetics & Hygiene", 
+      icon: <img src={resolveImgSrc(categoryImages["Cosmetics & Hygiene"] || "https://i.pinimg.com/736x/da/78/1d/da781de9ad2bffefcedb6d872856900c.jpg")} alt="Cosmetics & Hygiene" className="category-icon-img" /> 
     },
     { 
       name: "More", 

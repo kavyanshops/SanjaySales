@@ -16,6 +16,60 @@ export default function AdminPortal({
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('products'); // 'products', 'categories', 'bulk', 'orders'
   
+  // Admin Login/Signup Authentication States
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
+  const [registeredAdmins, setRegisteredAdmins] = useState([
+    { id: 'admin', password: 'admin' } // default admin credentials
+  ]);
+  const [authId, setAuthId] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authSecretKey, setAuthSecretKey] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [authSuccess, setAuthSuccess] = useState('');
+
+  const handleAuthSubmit = (e) => {
+    e.preventDefault();
+    setAuthError('');
+    setAuthSuccess('');
+
+    if (authMode === 'login') {
+      const match = registeredAdmins.find(
+        a => a.id.toLowerCase() === authId.trim().toLowerCase() && a.password === authPassword
+      );
+      if (match) {
+        setIsAdminAuthenticated(true);
+        setActionSuccess('Login Successful! Welcome to Admin Panel.');
+        setAuthId('');
+        setAuthPassword('');
+      } else {
+        setAuthError('Invalid Admin ID or Password. Please try again.');
+      }
+    } else {
+      if (!authId.trim() || !authPassword) {
+        setAuthError('Please enter a valid Admin ID and Password.');
+        return;
+      }
+      const normalizedKey = authSecretKey.trim().toUpperCase();
+      if (normalizedKey !== 'SANJAY_ADMIN' && normalizedKey !== 'ADMIN' && normalizedKey !== 'SANJAY_ADMIN_SECRET') {
+        setAuthError('Unauthorized registration! Invalid Admin Secret Security Code.');
+        return;
+      }
+      const exists = registeredAdmins.some(
+        a => a.id.toLowerCase() === authId.trim().toLowerCase()
+      );
+      if (exists) {
+        setAuthError('Admin ID already registered. Try logging in.');
+        return;
+      }
+      setRegisteredAdmins(prev => [...prev, { id: authId.trim(), password: authPassword }]);
+      setAuthSuccess('Admin Account Registered Successfully! You can now log in.');
+      setAuthMode('login');
+      setAuthSecretKey('');
+      setAuthPassword('');
+    }
+  };
+
   // Product Form states
   const [editingId, setEditingId] = useState(null); // null if adding
   const [name, setName] = useState('');
@@ -261,16 +315,262 @@ export default function AdminPortal({
     return p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
   });
 
+  if (!isAdminAuthenticated) {
+    return (
+      <div className="admin-login-wrapper" style={{
+        minHeight: '80vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px',
+        backgroundColor: 'var(--color-bg-main)'
+      }}>
+        <div className="admin-login-card" style={{
+          width: '100%',
+          maxWidth: '440px',
+          backgroundColor: 'var(--color-bg-card)',
+          borderRadius: '16px',
+          boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+          border: '1px solid var(--color-border)',
+          padding: '40px 32px',
+          textAlign: 'center'
+        }}>
+          <div className="login-logo-container" style={{ marginBottom: '24px' }}>
+            <span style={{ 
+              backgroundColor: 'var(--color-primary)', 
+              color: 'var(--color-accent)', 
+              padding: '12px 20px', 
+              borderRadius: '8px', 
+              fontWeight: '800', 
+              fontSize: '20px',
+              letterSpacing: '1px',
+              display: 'inline-block',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            }}>
+              SANJAY SALES
+            </span>
+            <h3 style={{ marginTop: '16px', fontSize: '22px', fontWeight: '800', color: 'var(--color-text-main)' }}>
+              Admin Control Panel
+            </h3>
+            <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', marginTop: '6px' }}>
+              {authMode === 'login' ? 'Please log in to manage your wholesale catalog' : 'Register new authorized admin credentials'}
+            </p>
+          </div>
+
+          <form onSubmit={handleAuthSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left' }}>
+            {authError && (
+              <div style={{
+                backgroundColor: '#fef2f2',
+                border: '1px solid #fee2e2',
+                color: 'var(--color-danger)',
+                padding: '12px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                ⚠️ {authError}
+              </div>
+            )}
+            {authSuccess && (
+              <div style={{
+                backgroundColor: '#ecfdf5',
+                border: '1px solid #d1fae5',
+                color: 'var(--color-success)',
+                padding: '12px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: '600',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                ✓ {authSuccess}
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="admin-auth-id" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--color-text-main)', marginBottom: '6px' }}>
+                Admin ID / Username
+              </label>
+              <input 
+                id="admin-auth-id"
+                type="text" 
+                placeholder="e.g. admin"
+                value={authId}
+                onChange={(e) => setAuthId(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--color-border)',
+                  fontSize: '14px',
+                  color: 'var(--color-text-main)',
+                  backgroundColor: '#f8fafc',
+                  outline: 'none',
+                  transition: 'border 0.2s'
+                }}
+              />
+            </div>
+
+            <div>
+              <label htmlFor="admin-auth-password" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--color-text-main)', marginBottom: '6px' }}>
+                Password
+              </label>
+              <input 
+                id="admin-auth-password"
+                type="password" 
+                placeholder="••••••••"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--color-border)',
+                  fontSize: '14px',
+                  color: 'var(--color-text-main)',
+                  backgroundColor: '#f8fafc',
+                  outline: 'none',
+                  transition: 'border 0.2s'
+                }}
+              />
+            </div>
+
+            {authMode === 'signup' && (
+              <div>
+                <label htmlFor="admin-auth-secret" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--color-text-main)', marginBottom: '6px' }}>
+                  Admin Security Secret Key
+                </label>
+                <input 
+                  id="admin-auth-secret"
+                  type="password" 
+                  placeholder="Enter admin verification key"
+                  value={authSecretKey}
+                  onChange={(e) => setAuthSecretKey(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--color-border)',
+                    fontSize: '14px',
+                    color: 'var(--color-text-main)',
+                    backgroundColor: '#f8fafc',
+                    outline: 'none',
+                    transition: 'border 0.2s'
+                  }}
+                />
+                <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '4px', display: 'block' }}>
+                  *Use key <strong>SANJAY_ADMIN</strong> to register new admin credentials.
+                </span>
+              </div>
+            )}
+
+            <button 
+              type="submit" 
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '8px',
+                border: 'none',
+                backgroundColor: 'var(--color-primary)',
+                color: 'white',
+                fontSize: '15px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                marginTop: '8px',
+                transition: 'background-color 0.2s',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary-dark)'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--color-primary)'}
+            >
+              {authMode === 'login' ? 'Access Control Desk' : 'Register Admin Account'}
+            </button>
+          </form>
+
+          <div style={{ marginTop: '24px', borderTop: '1px solid var(--color-border)', paddingTop: '20px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+              {authMode === 'login' ? (
+                <>
+                  Need to add a new admin?{' '}
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setAuthMode('signup');
+                      setAuthError('');
+                      setAuthSuccess('');
+                    }}
+                    style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontWeight: '700', cursor: 'pointer', padding: 0 }}
+                  >
+                    Create Account
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already registered?{' '}
+                  <button 
+                    type="button" 
+                    onClick={() => {
+                      setAuthMode('login');
+                      setAuthError('');
+                      setAuthSuccess('');
+                    }}
+                    style={{ background: 'none', border: 'none', color: 'var(--color-primary)', fontWeight: '700', cursor: 'pointer', padding: 0 }}
+                  >
+                    Log In
+                  </button>
+                </>
+              )}
+            </p>
+            <button 
+              type="button" 
+              onClick={() => navigate('/')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--color-text-muted)',
+                fontSize: '12px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                marginTop: '12px'
+              }}
+            >
+              ← Back to Shop front
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-page-wrapper navbar-width-limiter text-left">
-      <div className="admin-header-row" style={{ marginTop: '24px' }}>
+      <div className="admin-header-row" style={{ marginTop: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h2 className="page-main-title">Sanjay Sales Admin Control Desk</h2>
           <p className="page-main-subtitle">Commercial panel to manage inventory products, adjust wholesale prices, and configure frontpage layouts.</p>
         </div>
-        <button className="secondary-b2b-btn" onClick={() => navigate('/')}>
-          ← Back to Shop front
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button 
+            className="secondary-b2b-btn" 
+            onClick={() => {
+              setIsAdminAuthenticated(false);
+              setActionSuccess('Logged out successfully.');
+            }}
+            style={{ backgroundColor: '#fee2e2', color: 'var(--color-danger)', borderColor: '#fca5a5' }}
+          >
+            🔒 Log Out Admin
+          </button>
+          <button className="secondary-b2b-btn" onClick={() => navigate('/')}>
+            ← Back to Shop front
+          </button>
+        </div>
       </div>
 
       {/* Admin Panel Tab toggles */}
