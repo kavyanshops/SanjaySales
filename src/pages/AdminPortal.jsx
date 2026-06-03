@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { allCategories } from '../util/productsData';
 
@@ -19,9 +19,83 @@ export default function AdminPortal({
   // Admin Login/Signup Authentication States
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'signup'
-  const [registeredAdmins, setRegisteredAdmins] = useState([
-    { id: 'admin', password: 'admin' } // default admin credentials
-  ]);
+  
+  const [registeredAdmins, setRegisteredAdmins] = useState(() => {
+    const saved = localStorage.getItem('sanjay_sales_admins');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error("Failed to parse admins database", e);
+      }
+    }
+    return [
+      { id: 'admin', password: 'admin' },
+      { id: 'vansh2005', password: 'Vansh@2005' }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sanjay_sales_admins', JSON.stringify(registeredAdmins));
+  }, [registeredAdmins]);
+
+  // Manage Admins tab states
+  const [editingAdminId, setEditingAdminId] = useState(null);
+  const [adminAccId, setAdminAccId] = useState('');
+  const [adminAccPassword, setAdminAccPassword] = useState('');
+
+  const handleAdminAccountSubmit = (e) => {
+    e.preventDefault();
+    const cleanId = adminAccId.trim();
+    const cleanPassword = adminAccPassword.trim();
+    if (!cleanId || !cleanPassword) return;
+
+    if (editingAdminId) {
+      setRegisteredAdmins(prev => 
+        prev.map(a => a.id.toLowerCase() === editingAdminId.toLowerCase() ? { id: a.id, password: cleanPassword } : a)
+      );
+      setActionSuccess(`Password for admin "${editingAdminId}" updated successfully!`);
+      setEditingAdminId(null);
+    } else {
+      const exists = registeredAdmins.some(
+        a => a.id.toLowerCase() === cleanId.toLowerCase()
+      );
+      if (exists) {
+        alert("This Admin ID is already registered.");
+        return;
+      }
+      setRegisteredAdmins(prev => [...prev, { id: cleanId, password: cleanPassword }]);
+      setActionSuccess(`Admin "${cleanId}" registered successfully!`);
+    }
+    setAdminAccId('');
+    setAdminAccPassword('');
+    setTimeout(() => setActionSuccess(''), 2500);
+  };
+
+  const handleEditAdminClick = (adminAcc) => {
+    setEditingAdminId(adminAcc.id);
+    setAdminAccId(adminAcc.id);
+    setAdminAccPassword(adminAcc.password);
+  };
+
+  const handleCancelEditAdmin = () => {
+    setEditingAdminId(null);
+    setAdminAccId('');
+    setAdminAccPassword('');
+  };
+
+  const handleDeleteAdminClick = (adminId) => {
+    if (registeredAdmins.length <= 1) {
+      alert("Cannot delete the last admin account! At least one administrator account must exist.");
+      return;
+    }
+    if (window.confirm(`Are you sure you want to delete admin account "${adminId}"?`)) {
+      setRegisteredAdmins(prev => prev.filter(a => a.id.toLowerCase() !== adminId.toLowerCase()));
+      setActionSuccess(`Admin account "${adminId}" deleted successfully!`);
+      setTimeout(() => setActionSuccess(''), 2000);
+    }
+  };
+
   const [authId, setAuthId] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authSecretKey, setAuthSecretKey] = useState('');
@@ -465,9 +539,6 @@ export default function AdminPortal({
                     transition: 'border 0.2s'
                   }}
                 />
-                <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '4px', display: 'block' }}>
-                  *Use key <strong>SANJAY_ADMIN</strong> to register new admin credentials.
-                </span>
               </div>
             )}
 
@@ -598,6 +669,12 @@ export default function AdminPortal({
           onClick={() => setActiveTab('orders')}
         >
           Orders Placed Log ({orders.length})
+        </button>
+        <button 
+          className={`admin-tab-btn ${activeTab === 'admins' ? 'active' : ''}`}
+          onClick={() => setActiveTab('admins')}
+        >
+          Admin Accounts ({registeredAdmins.length})
         </button>
       </div>
 
@@ -1160,6 +1237,131 @@ export default function AdminPortal({
               })}
             </div>
           )}
+        </div>
+      )}
+
+      {/* TAB 5: ADMIN ACCOUNTS PERSISTENCE & MANAGEMENT */}
+      {activeTab === 'admins' && (
+        <div className="admin-grid-layout mt-6">
+          {/* Left Form: Add/Edit Admin Account */}
+          <div className="admin-form-column">
+            <div className="summary-card">
+              <h3>{editingAdminId ? 'Edit Admin Credentials' : 'Register New Admin Account'}</h3>
+              <p className="gst-disclaimer">Create, edit, or remove administrative users allowed to access this Control Desk.</p>
+              <div className="divider-card"></div>
+
+              <form onSubmit={handleAdminAccountSubmit} className="login-form">
+                <div className="form-group">
+                  <label htmlFor="admin-acc-id">Admin Username / ID *</label>
+                  <input 
+                    type="text" 
+                    id="admin-acc-id"
+                    value={adminAccId}
+                    onChange={(e) => setAdminAccId(e.target.value.replace(/\s/g, ''))}
+                    placeholder="e.g. vansh2005"
+                    required
+                    disabled={editingAdminId !== null}
+                    className="pincode-input"
+                    style={{ width: '100%', height: '42px', padding: '10px', fontSize: '14px', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="admin-acc-pass">Admin Password *</label>
+                  <input 
+                    type="text"
+                    id="admin-acc-pass"
+                    value={adminAccPassword}
+                    onChange={(e) => setAdminAccPassword(e.target.value)}
+                    placeholder="Enter password"
+                    required
+                    className="pincode-input"
+                    style={{ width: '100%', height: '42px', padding: '10px', fontSize: '14px', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                  <button 
+                    type="submit" 
+                    className="pincode-btn" 
+                    style={{ flex: 1, backgroundColor: 'var(--color-primary)', color: 'white', height: '40px', fontWeight: 'bold' }}
+                  >
+                    {editingAdminId ? 'Save Changes' : 'Create Admin'}
+                  </button>
+                  {editingAdminId && (
+                    <button 
+                      type="button" 
+                      onClick={handleCancelEditAdmin} 
+                      className="pincode-btn" 
+                      style={{ flex: 1, backgroundColor: '#e2e8f0', color: '#1e293b', height: '40px', fontWeight: 'bold' }}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+
+          {/* Right Table: List of Admin Accounts */}
+          <div className="admin-table-column">
+            <div className="summary-card">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h3 style={{ margin: 0 }}>Registered Admins Database</h3>
+                <span className="b2b-badge">{registeredAdmins.length} Active Accounts</span>
+              </div>
+              <div className="divider-card"></div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table className="admin-orders-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '2px solid var(--color-border)' }}>
+                      <th style={{ padding: '12px' }}>Admin ID</th>
+                      <th style={{ padding: '12px' }}>Password</th>
+                      <th style={{ padding: '12px', textAlign: 'right' }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {registeredAdmins.map((adminAcc) => (
+                      <tr key={adminAcc.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                        <td style={{ padding: '12px', fontWeight: 'bold' }}>{adminAcc.id}</td>
+                        <td style={{ padding: '12px', fontFamily: 'monospace' }}>{adminAcc.password}</td>
+                        <td style={{ padding: '12px', textAlign: 'right' }}>
+                          <button 
+                            type="button"
+                            onClick={() => handleEditAdminClick(adminAcc)}
+                            style={{ 
+                              background: 'none', 
+                              border: 'none', 
+                              color: 'var(--color-primary)', 
+                              fontWeight: 'bold', 
+                              marginRight: '12px', 
+                              cursor: 'pointer' 
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={() => handleDeleteAdminClick(adminAcc.id)}
+                            style={{ 
+                              background: 'none', 
+                              border: 'none', 
+                              color: 'var(--color-danger)', 
+                              fontWeight: 'bold', 
+                              cursor: 'pointer' 
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
