@@ -1087,6 +1087,52 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-accent);
 }
 
+/* Slider navigation arrows for laptops/desktops */
+.slider-arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast) ease;
+  z-index: 10;
+}
+
+.slider-arrow-btn:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--color-accent);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.slider-arrow-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.prev-arrow {
+  left: 24px;
+}
+
+.next-arrow {
+  right: 24px;
+}
+
+@media (max-width: 768px) {
+  .slider-arrow-btn {
+    display: none !important;
+  }
+}
+
 /* 8 Categories Circle List */
 .categories-grid-section {
   padding: 48px 24px 24px;

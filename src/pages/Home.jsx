@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StarIcon, ChevronRightIcon } from '../components/Icons';
+import { StarIcon, ChevronRightIcon, ChevronLeftIcon } from '../components/Icons';
 import { getTieredWholesalePrice } from '../util/productsData';
 import amul from '../assets/amul.jpg';
 
@@ -14,6 +14,8 @@ export default function Home({
   const navigate = useNavigate();
   const [activeSlide, setActiveSlide] = useState(0);
   const [quantities, setQuantities] = useState({});
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
   const handleQuantityChange = (productId, val) => {
     setQuantities(prev => ({ ...prev, [productId]: val }));
@@ -49,7 +51,31 @@ export default function Home({
       setActiveSlide((prev) => (prev + 1) % bannerSlides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [activeSlide, bannerSlides.length]);
+
+  // Touch Swipe Gesture Handlers
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe) {
+      setActiveSlide((prev) => (prev + 1) % bannerSlides.length);
+    } else if (isRightSwipe) {
+      setActiveSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
+    }
+  };
 
   // Set category filter and route to browse
   const handleCategorySelect = (categoryName) => {
@@ -155,7 +181,22 @@ export default function Home({
     <div className="home-container">
       {/* Hero Banner Slider */}
       <section className="hero-slider-section">
-        <div className={`slider-viewport ${bannerSlides[activeSlide].theme}`}>
+        <div 
+          className={`slider-viewport ${bannerSlides[activeSlide].theme}`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Left Arrow Button */}
+          <button 
+            type="button" 
+            className="slider-arrow-btn prev-arrow" 
+            onClick={() => setActiveSlide((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length)}
+            aria-label="Previous slide"
+          >
+            <ChevronLeftIcon size={24} />
+          </button>
+
           <div className="slide-content-wrap navbar-width-limiter">
             <span className="slide-badge">{bannerSlides[activeSlide].badge}</span>
             <h1 className="slide-title">{bannerSlides[activeSlide].title}</h1>
@@ -166,6 +207,16 @@ export default function Home({
             </button>
           </div>
           
+          {/* Right Arrow Button */}
+          <button 
+            type="button" 
+            className="slider-arrow-btn next-arrow" 
+            onClick={() => setActiveSlide((prev) => (prev + 1) % bannerSlides.length)}
+            aria-label="Next slide"
+          >
+            <ChevronRightIcon size={24} />
+          </button>
+
           {/* Dots Indicator */}
           <div className="slider-dots">
             {bannerSlides.map((_, index) => (
