@@ -212,26 +212,53 @@ export default function Home({
           </button>
         </div>
 
-        <div className="deals-grid">
+        <div className="products-grid-layout">
           {superSaverDeals.map((product) => {
+            const margin = Math.round(((product.retailPrice - product.wholesalePrice) / product.retailPrice) * 100);
             const qty = quantities[product.id] !== undefined ? quantities[product.id] : (product.moq || 10);
             return (
-              <div key={product.id} className="deal-card">
-                <div className="deal-discount-badge">{product.discountPercent}% OFF</div>
-                <div className="deal-image-wrap">
-                  <img src={product.imageUrl} alt={product.name} className="deal-image" />
+              <div key={product.id} className="product-card-unit">
+                <div className="bestseller-ribbon">{product.discountPercent}% OFF</div>
+                <div className="product-image-container">
+                  <img src={product.imageUrl} alt={product.name} className="product-card-img" />
                 </div>
-                <div className="deal-info-wrap">
-                  <span className="deal-brand">{product.brand}</span>
-                  <h4 className="deal-name" onClick={() => {
+                <div className="product-details-container">
+                  <span className="product-brand-tag">{product.brand}</span>
+                  <h3 className="product-name-heading" onClick={() => {
                     setSelectedCategories([product.category]);
                     navigate('/browse');
-                  }}>{product.name}</h4>
-                  <span className="deal-pack">{product.packSize}</span>
-                  <div className="price-pricing-flex">
+                  }}>{product.name}</h3>
+                  <span className="product-pack-size">{product.packSize}</span>
+                  
+                  {/* Stars */}
+                  <div className="product-rating-row">
+                    <div className="stars-wrap">
+                      <StarIcon className="star-icon" />
+                      <span className="rating-val">{product.rating}</span>
+                    </div>
+                    <span className="reviews-cnt">({product.reviewsCount} reviews)</span>
+                  </div>
+
+                  <div className="divider-card"></div>
+
+                  <div className="margin-indicator-label">
+                    Margin: <span className="margin-green">{margin}% Profit</span>
+                  </div>
+
+                  <div style={{ fontSize: '11px', textAlign: 'left', marginTop: '6px', marginBottom: '6px' }}>
+                    {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? (
+                      <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>❌ Out of Stock</span>
+                    ) : (product.inventory !== undefined ? product.inventory : 100) < 10 ? (
+                      <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>left in stock : {product.inventory}</span>
+                    ) : (
+                      <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>✓ In Stock ({product.inventory !== undefined ? product.inventory : 100} packs)</span>
+                    )}
+                  </div>
+
+                  <div className="price-actions-flex-row">
                     <div className="price-stack">
-                      <span className="retail-strike">MRP ₹{product.retailPrice}</span>
-                      <span className="wholesale-price" style={{ margin: 0 }}>₹{getTieredWholesalePrice(product, qty)} <span className="ex-gst">ex. GST</span></span>
+                      <span className="mrp-txt">MRP ₹{product.retailPrice}</span>
+                      <span className="wholesale-deal-price" style={{ margin: 0 }}>₹{getTieredWholesalePrice(product, qty)} <span className="ex-gst">ex. GST</span></span>
                     </div>
 
                     <div className="qty-selector-container">
@@ -275,24 +302,15 @@ export default function Home({
                     </div>
 
                     <button 
-                      className="deal-add-btn" 
+                      className="add-to-cart-b2b-btn" 
                       onClick={() => onAddToCart(product, parseInt(qty) || product.moq || 10)}
                       disabled={(product.inventory !== undefined ? product.inventory : 100) <= 0}
                       style={(product.inventory !== undefined ? product.inventory : 100) <= 0 ? { backgroundColor: '#cbd5e1', cursor: 'not-allowed', color: '#64748b', padding: '8px', width: '100%' } : { padding: '8px', width: '100%' }}
                     >
-                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : `Add to Cart (${qty})`}
+                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? 'Out of Stock' : `Add Bulk (${qty})`}
                     </button>
-
-                    <div style={{ fontSize: '11px', textAlign: 'left', marginTop: '2px' }}>
-                      {(product.inventory !== undefined ? product.inventory : 100) <= 0 ? (
-                        <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>❌ Out of Stock</span>
-                      ) : (product.inventory !== undefined ? product.inventory : 100) < 10 ? (
-                        <span style={{ color: 'var(--color-danger)', fontWeight: 'bold' }}>left in stock : {product.inventory}</span>
-                      ) : (
-                        <span style={{ color: 'var(--color-success)', fontWeight: '600' }}>✓ In Stock ({product.inventory !== undefined ? product.inventory : 100} packs)</span>
-                      )}
-                    </div>
                   </div>
+
                 </div>
               </div>
             );

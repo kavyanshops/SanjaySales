@@ -3277,11 +3277,27 @@ html, body {
     text-align: center !important;
   }
   
-  .price-pricing-flex .price-stack,
-  .price-actions-flex-row .price-stack,
-  .price-checkout-row .price-stack {
+  .price-pricing-flex,
+  .price-actions-flex-row,
+  .price-checkout-row,
+  .price-stack {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
+    justify-content: center !important;
+  }
+
+  .price-stack span,
+  .mrp-txt,
+  .retail-strike,
+  .wholesale-deal-price,
+  .wholesale-price {
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 auto !important;
   }
   
   .price-pricing-flex .qty-selector-container,
@@ -3290,12 +3306,6 @@ html, body {
     margin: 0 auto !important;
     width: fit-content !important;
     justify-content: center !important;
-  }
-  
-  .mrp-txt, .retail-strike {
-    text-align: center !important;
-    display: block !important;
-    width: 100% !important;
   }
 }
 
