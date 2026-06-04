@@ -1,0 +1,13 @@
+/* Sanjay Sales Custom App Layout Clean Stylesheet */
+.app-main-flex-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content-fluid-grow {
+  flex-grow: 1;
+  width: 100%;
+  box-sizing: border-box;
+}
