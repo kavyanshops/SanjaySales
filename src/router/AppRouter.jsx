@@ -10,7 +10,7 @@ import ProductDetails from '../pages/ProductDetails';
 
 export default function AppRouter({
   products,
-  categoryImages,
+  categories,
   setSelectedCategories,
   setSelectedBrands,
   onAddToCart,
@@ -34,7 +34,7 @@ export default function AppRouter({
   onAddProduct,
   onUpdateProduct,
   onDeleteProduct,
-  onUpdateCategoryImages,
+  onUpdateCategories,
   onBulkAdjustPrices,
   onResetCatalog
 }) {
@@ -43,7 +43,7 @@ export default function AppRouter({
       <Route path="/" element={
         <Home 
           products={products}
-          categoryImages={categoryImages}
+          categories={categories}
           setSelectedCategories={setSelectedCategories}
           setSelectedBrands={setSelectedBrands}
           onAddToCart={onAddToCart}
@@ -52,6 +52,7 @@ export default function AppRouter({
       <Route path="/browse" element={
         <Browse 
           products={products}
+          categories={categories}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           selectedCategories={selectedCategories}
@@ -64,6 +65,7 @@ export default function AppRouter({
       <Route path="/Browse" element={
         <Browse 
           products={products}
+          categories={categories}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           selectedCategories={selectedCategories}
@@ -114,12 +116,12 @@ export default function AppRouter({
       <Route path="/admin" element={
         <AdminPortal 
           products={products}
-          categoryImages={categoryImages}
+          categories={categories}
           orders={orders}
           onAddProduct={onAddProduct}
           onUpdateProduct={onUpdateProduct}
           onDeleteProduct={onDeleteProduct}
-          onUpdateCategoryImages={onUpdateCategoryImages}
+          onUpdateCategories={onUpdateCategories}
           onBulkAdjustPrices={onBulkAdjustPrices}
           onResetCatalog={onResetCatalog}
         />

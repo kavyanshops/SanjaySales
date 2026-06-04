@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { allCategories } from '../util/productsData';
 
 export default function AdminPortal({ 
   products, 
-  categoryImages, 
+  categories, 
   orders = [],
   onAddProduct, 
   onUpdateProduct, 
   onDeleteProduct, 
-  onUpdateCategoryImages, 
+  onUpdateCategories, 
   onBulkAdjustPrices,
   onResetCatalog
 }) {
@@ -159,7 +158,9 @@ export default function AdminPortal({
   const [editingId, setEditingId] = useState(null); // null if adding
   const [name, setName] = useState('');
   const [brand, setBrand] = useState('');
-  const [category, setCategory] = useState(allCategories[0]);
+  const [category, setCategory] = useState(() => {
+    return categories && categories.length > 0 ? categories[0].name : '';
+  });
   const [retailPrice, setRetailPrice] = useState('');
   const [wholesalePrice, setWholesalePrice] = useState('');
   const [packSize, setPackSize] = useState('');
@@ -177,8 +178,25 @@ export default function AdminPortal({
   // Image Source Tab: 'link' or 'upload'
   const [imageSourceType, setImageSourceType] = useState('link');
 
-  // Category Form states
-  const [localCategoryImages, setLocalCategoryImages] = useState({ ...categoryImages });
+  // Category Manager states
+  const [localCategories, setLocalCategories] = useState(() => categories || []);
+  const [newCatName, setNewCatName] = useState('');
+  const [newCatImageUrl, setNewCatImageUrl] = useState('');
+  const [newCatShowOnHome, setNewCatShowOnHome] = useState(true);
+
+  // Sync with categories prop
+  useEffect(() => {
+    if (categories) {
+      setLocalCategories(categories);
+    }
+  }, [categories]);
+
+  // Keep form selection valid if categories change
+  useEffect(() => {
+    if (categories && categories.length > 0 && (!category || !categories.some(c => c.name === category))) {
+      setCategory(categories[0].name);
+    }
+  }, [categories, category]);
 
   // Bulk rate adjustment states
   const [priceAdjPercent, setPriceAdjPercent] = useState('5');
@@ -255,7 +273,7 @@ export default function AdminPortal({
     setEditingId(null);
     setName('');
     setBrand('');
-    setCategory(allCategories[0]);
+    setCategory(categories && categories.length > 0 ? categories[0].name : '');
     setRetailPrice('');
     setWholesalePrice('');
     setPackSize('');
@@ -344,7 +362,7 @@ export default function AdminPortal({
     // Clear form
     setName('');
     setBrand('');
-    setCategory(allCategories[0]);
+    setCategory(categories && categories.length > 0 ? categories[0].name : '');
     setRetailPrice('');
     setWholesalePrice('');
     setPackSize('');
@@ -369,15 +387,60 @@ export default function AdminPortal({
     }
   };
 
-  const handleCategoryImageChange = (catName, url) => {
-    setLocalCategoryImages(prev => ({ ...prev, [catName]: url }));
+  const handleAddCategorySubmit = (e) => {
+    e.preventDefault();
+    const nameTrimmed = newCatName.trim();
+    const urlTrimmed = newCatImageUrl.trim();
+    if (!nameTrimmed || !urlTrimmed) return;
+
+    // Check if name already exists in localCategories
+    const exists = localCategories.some(
+      c => c.name.toLowerCase() === nameTrimmed.toLowerCase()
+    );
+    if (exists) {
+      alert(`Category "${nameTrimmed}" already exists.`);
+      return;
+    }
+
+    const newCat = {
+      name: nameTrimmed,
+      imageUrl: urlTrimmed,
+      showOnHome: newCatShowOnHome
+    };
+
+    setLocalCategories(prev => [...prev, newCat]);
+    setNewCatName('');
+    setNewCatImageUrl('');
+    setNewCatShowOnHome(true);
+    
+    setActionSuccess(`Category "${nameTrimmed}" added to local draft! Remember to save changes.`);
+    setTimeout(() => setActionSuccess(''), 2500);
   };
 
-  const handleCategorySave = (e) => {
-    e.preventDefault();
-    onUpdateCategoryImages(localCategoryImages);
-    setBulkSuccess("Category circle images updated successfully!");
+  const handleLocalCatImageChange = (index, value) => {
+    setLocalCategories(prev => prev.map((cat, i) => i === index ? { ...cat, imageUrl: value } : cat));
+  };
+
+  const handleLocalCatShowOnHomeToggle = (index, value) => {
+    setLocalCategories(prev => prev.map((cat, i) => i === index ? { ...cat, showOnHome: value } : cat));
+  };
+
+  const handleLocalCatDelete = (name) => {
+    if (window.confirm(`Are you sure you want to delete category "${name}"? This will affect product listings.`)) {
+      setLocalCategories(prev => prev.filter(cat => cat.name !== name));
+    }
+  };
+
+  const handleSaveCategoriesConfig = () => {
+    onUpdateCategories(localCategories);
+    setBulkSuccess("Wholesale categories updated successfully!");
     setTimeout(() => setBulkSuccess(''), 2000);
+  };
+
+  const handleRevertCategories = () => {
+    if (window.confirm("Revert category changes back to saved settings?")) {
+      setLocalCategories(categories || []);
+    }
   };
 
   const handleBulkRateSubmit = (e) => {
@@ -395,19 +458,6 @@ export default function AdminPortal({
   const handleResetCatalogSubmit = () => {
     if (window.confirm("This will revert all product listings and category images to default distributor database. Continue?")) {
       onResetCatalog();
-      setLocalCategoryImages({
-        "Chocolates & Candies": "cadbury_category.jpg",
-        "Daily Use": "mop_category.jpg",
-        "Home Essentials": "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=150&q=80",
-        "Preservatives": "chips_category.jpg",
-        "Sweets & Namkeen": "rasgulla_category.jpg",
-        "Beverages": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=150&q=80",
-        "Grains & Masalas": "https://images.unsplash.com/photo-1574316071802-0d684efa7bf5?auto=format&fit=crop&w=150&q=80",
-        "Fresh & Dairy": "https://images.unsplash.com/photo-1528750955906-c8b4a3952f2d?auto=format&fit=crop&w=150&q=80",
-        "Snacks & Biscuits": "https://images.unsplash.com/photo-1558961312-50a49c93acfe?auto=format&fit=crop&w=150&q=80",
-        "Cosmetics & Hygiene": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=150&q=80",
-        "More": ""
-      });
       setBulkSuccess("Wholesale database restored to factory settings!");
       setTimeout(() => setBulkSuccess(''), 3000);
     }
@@ -792,8 +842,8 @@ export default function AdminPortal({
                     className="pincode-input font-bold"
                     style={{ height: '42px', padding: '8px' }}
                   >
-                    {allCategories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
+                    {categories.map(cat => (
+                      <option key={cat.name} value={cat.name}>{cat.name}</option>
                     ))}
                   </select>
                 </div>
@@ -1164,43 +1214,157 @@ export default function AdminPortal({
         </div>
       )}
 
-      {/* TAB 2: CATEGORY CIRCLE IMAGES */}
+      {/* TAB 2: WHOLESALE CATEGORIES MANAGER */}
       {activeTab === 'categories' && (
-        <div className="summary-card mt-6" style={{ maxWidth: '800px' }}>
-          <h3>Category Circle Media Manager</h3>
-          <p className="gst-disclaimer">Swap the circular layout images featured on the home page dynamically.</p>
-          <div className="divider-card"></div>
+        <div className="admin-grid-layout mt-6">
+          {/* Left Form: Add New Category */}
+          <div className="admin-form-column">
+            <div className="summary-card">
+              <h3>Create Wholesale Category</h3>
+              <p className="gst-disclaimer">Add a new market segment to the distributor catalog.</p>
+              <div className="divider-card"></div>
 
-          <form onSubmit={handleCategorySave} className="login-form">
-            <div className="admin-category-form-grid">
-              {Object.keys(localCategoryImages).map(catName => {
-                if (catName === 'More') return null; // "More" uses styled text
-                return (
-                  <div className="form-group" key={catName}>
-                    <label>{catName}</label>
-                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      <img 
-                        src={localCategoryImages[catName]} 
-                        alt="" 
-                        style={{ width: '40px', height: '40px', borderRadius: '4px', border: '1px solid var(--color-border)', objectFit: 'cover' }} 
-                      />
-                      <input 
-                        type="text" 
-                        value={localCategoryImages[catName]} 
-                        onChange={(e) => handleCategoryImageChange(catName, e.target.value)}
-                        placeholder="Image URL or Path"
-                        className="pincode-input"
-                        style={{ fontSize: '13px' }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+              <form onSubmit={handleAddCategorySubmit} className="login-form">
+                <div className="form-group">
+                  <label htmlFor="new-cat-name">Category Title / Name *</label>
+                  <input 
+                    type="text" 
+                    id="new-cat-name"
+                    value={newCatName}
+                    onChange={(e) => setNewCatName(e.target.value)}
+                    placeholder="e.g. Instant Food"
+                    required
+                    className="pincode-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="new-cat-img">Category Image URL *</label>
+                  <input 
+                    type="text" 
+                    id="new-cat-img"
+                    value={newCatImageUrl}
+                    onChange={(e) => setNewCatImageUrl(e.target.value)}
+                    placeholder="e.g. https://images.unsplash.com/..."
+                    required
+                    className="pincode-input"
+                  />
+                </div>
+
+                <label className="checkbox-label-row mt-2" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input 
+                    type="checkbox"
+                    checked={newCatShowOnHome}
+                    onChange={(e) => setNewCatShowOnHome(e.target.checked)}
+                    className="custom-checkbox"
+                  />
+                  <span className="checkbox-text-label font-bold text-sm">Show on Homepage Category Bar</span>
+                </label>
+
+                <div className="admin-form-actions-row">
+                  <button type="submit" className="checkout-proceed-btn" style={{ flex: 1 }}>
+                    Add Category
+                  </button>
+                </div>
+              </form>
             </div>
-            <button type="submit" className="checkout-proceed-btn mt-6" style={{ maxWidth: '250px' }}>
-              Save Category Images
-            </button>
-          </form>
+          </div>
+
+          {/* Right Column: Listing & Edits */}
+          <div className="admin-table-column">
+            <div className="summary-card" style={{ padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '16px' }}>
+                <h3 style={{ margin: 0 }}>Wholesale Segments ({localCategories.length})</h3>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    type="button" 
+                    className="pincode-btn font-bold" 
+                    onClick={handleSaveCategoriesConfig}
+                    style={{ backgroundColor: 'var(--color-primary)', color: 'white', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    Save Changes
+                  </button>
+                  <button 
+                    type="button" 
+                    className="pincode-btn font-bold" 
+                    onClick={handleRevertCategories}
+                    style={{ backgroundColor: '#e2e8f0', color: 'var(--color-text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    Revert
+                  </button>
+                </div>
+              </div>
+              <div className="divider-card"></div>
+
+              <div style={{ overflowX: 'auto', maxHeight: '600px' }}>
+                <table className="invoice-table" style={{ width: '100%', fontSize: '13px' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ width: '180px' }}>Category Name</th>
+                      <th>Image URL Path</th>
+                      <th className="text-center" style={{ width: '110px' }}>Show on Home</th>
+                      <th className="text-center" style={{ width: '80px' }}>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {localCategories.map((cat, idx) => (
+                      <tr key={cat.name}>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <img 
+                              src={cat.imageUrl} 
+                              alt="" 
+                              style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--color-border)' }} 
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = 'https://placehold.co/100x100?text=Category';
+                              }}
+                            />
+                            <strong>{cat.name}</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input 
+                            type="text" 
+                            value={cat.imageUrl} 
+                            onChange={(e) => handleLocalCatImageChange(idx, e.target.value)}
+                            placeholder="Image URL"
+                            className="pincode-input"
+                            style={{ width: '100%', padding: '6px 10px', fontSize: '12px', margin: 0 }}
+                          />
+                        </td>
+                        <td className="text-center">
+                          <input 
+                            type="checkbox" 
+                            checked={cat.showOnHome} 
+                            onChange={(e) => handleLocalCatShowOnHomeToggle(idx, e.target.checked)}
+                            className="custom-checkbox"
+                          />
+                        </td>
+                        <td className="text-center">
+                          <button 
+                            type="button" 
+                            className="pincode-btn" 
+                            onClick={() => handleLocalCatDelete(cat.name)}
+                            style={{ padding: '4px 8px', fontSize: '11px', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--color-danger)', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {localCategories.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="text-center" style={{ padding: '24px 0', color: 'var(--color-text-muted)' }}>
+                          No categories defined. Add one above.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

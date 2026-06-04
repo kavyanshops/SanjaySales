@@ -7,20 +7,19 @@ import LoginModal from './components/LoginModal';
 import { productsData } from './util/productsData';
 import './App.css';
 
-// Default Category Images Setup
-const defaultCategoryImages = {
-  "Chocolates & Candies": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Cadbury_logo_new.jpg/500px-Cadbury_logo_new.jpg",
-  "Daily Use": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR7kV9hA2yF0-BdwARpbVqum34JV7P2cR5fA&s",
-  "Home Essentials": "https://cdn.brandfetch.io/domain/springwel.in/fallback/lettermark/theme/dark/h/400/w/400/icon?c=1bfwsmEH20zzEfSNTed",
-  "Preservatives": "chips_category.jpg",
-  "Sweets & Namkeen": "rasgulla_category.jpg",
-  "Beverages": "https://www.logodesignlove.com/wp-content/uploads/2021/07/coca-cola-logo-arden-square-01.jpg",
-  "Grains & Masalas": "https://prithvienterprises.co.in/cdn/shop/collections/Aashirvaad_Logo.png?v=1746877542&width=750",
-  "Fresh & Dairy": "https://animationvisarts.com/wp-content/uploads/2023/12/Frame-32-6.png",
-  "Snacks & Biscuits": "https://images.yourstory.com/cs/images/companies/4146603810349766400073541079337822789304320o-1611498760663.png?fm=auto&ar=1%3A1&mode=fill&fill=solid&fill-color=fff&format=auto&w=1920&q=85",
-  "Cosmetics & Hygiene": "https://i.pinimg.com/736x/da/78/1d/da781de9ad2bffefcedb6d872856900c.jpg",
-  "More": ""
-};
+// Default Categories Setup
+const defaultCategories = [
+  { name: "Chocolates & Candies", showOnHome: true, imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Cadbury_logo_new.jpg/500px-Cadbury_logo_new.jpg" },
+  { name: "Daily Use", showOnHome: true, imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR7kV9hA2yF0-BdwARpbVqum34JV7P2cR5fA&s" },
+  { name: "Home Essentials", showOnHome: true, imageUrl: "https://cdn.brandfetch.io/domain/springwel.in/fallback/lettermark/theme/dark/h/400/w/400/icon?c=1bfwsmEH20zzEfSNTed" },
+  { name: "Preservatives", showOnHome: true, imageUrl: "chips_category.jpg" },
+  { name: "Sweets & Namkeen", showOnHome: true, imageUrl: "rasgulla_category.jpg" },
+  { name: "Beverages", showOnHome: true, imageUrl: "https://www.logodesignlove.com/wp-content/uploads/2021/07/coca-cola-logo-arden-square-01.jpg" },
+  { name: "Grains & Masalas", showOnHome: true, imageUrl: "https://prithvienterprises.co.in/cdn/shop/collections/Aashirvaad_Logo.png?v=1746877542&width=750" },
+  { name: "Fresh & Dairy", showOnHome: true, imageUrl: "https://animationvisarts.com/wp-content/uploads/2023/12/Frame-32-6.png" },
+  { name: "Snacks & Biscuits", showOnHome: true, imageUrl: "https://images.yourstory.com/cs/images/companies/4146603810349766400073541079337822789304320o-1611498760663.png?fm=auto&ar=1%3A1&mode=fill&fill=solid&fill-color=fff&format=auto&w=1920&q=85" },
+  { name: "Cosmetics & Hygiene", showOnHome: true, imageUrl: "https://i.pinimg.com/736x/da/78/1d/da781de9ad2bffefcedb6d872856900c.jpg" }
+];
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +27,23 @@ export default function App() {
 
   // --- Dynamic B2B Catalog and Settings States ---
   const [products, setProducts] = useState(() => productsData.map(p => ({ ...p, inventory: 100 })));
-  const [categoryImages, setCategoryImages] = useState(defaultCategoryImages);
+  const [categories, setCategories] = useState(() => {
+    const saved = localStorage.getItem('sanjay_sales_categories');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        console.error("Failed to parse categories", e);
+      }
+    }
+    return defaultCategories;
+  });
+
+  // Sync categories to localStorage
+  useEffect(() => {
+    localStorage.setItem('sanjay_sales_categories', JSON.stringify(categories));
+  }, [categories]);
 
   // --- Orders & Saved Addresses B2B States ---
   const [orders, setOrders] = useState([]);
@@ -78,8 +93,8 @@ export default function App() {
     setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
   };
 
-  const handleUpdateCategoryImages = (updatedImagesMap) => {
-    setCategoryImages(updatedImagesMap);
+  const handleUpdateCategories = (updatedCategories) => {
+    setCategories(updatedCategories);
   };
 
   const handleBulkAdjustPrices = (percentage) => {
@@ -98,7 +113,7 @@ export default function App() {
 
   const handleResetCatalog = () => {
     setProducts(productsData.map(p => ({ ...p, inventory: 100 })));
-    setCategoryImages(defaultCategoryImages);
+    setCategories(defaultCategories);
   };
 
   // --- Login / Profile Action callbacks ---
@@ -207,7 +222,7 @@ export default function App() {
       <div className="main-content-fluid-grow">
         <AppRouter 
           products={products}
-          categoryImages={categoryImages}
+          categories={categories}
           setSelectedCategories={setSelectedCategories}
           setSelectedBrands={setSelectedBrands}
           onAddToCart={handleAddToCart}
@@ -230,7 +245,7 @@ export default function App() {
           onAddProduct={handleAddProduct}
           onUpdateProduct={handleUpdateProduct}
           onDeleteProduct={handleDeleteProduct}
-          onUpdateCategoryImages={handleUpdateCategoryImages}
+          onUpdateCategories={handleUpdateCategories}
           onBulkAdjustPrices={handleBulkAdjustPrices}
           onResetCatalog={handleResetCatalog}
         />

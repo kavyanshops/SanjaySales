@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  allCategories, 
   allBrands,
   getTieredWholesalePrice
 } from '../util/productsData';
@@ -21,8 +20,10 @@ export default function Browse({
   setSelectedCategories, 
   selectedBrands,
   setSelectedBrands,
-  onAddToCart 
+  onAddToCart,
+  categories
 }) {
+  const categoriesList = categories ? categories.map(c => c.name) : [];
   const navigate = useNavigate();
   const [sortOption, setSortOption] = useState('most-bought'); // 'alpha', 'price-low', 'price-high', 'most-bought'
   const [quantities, setQuantities] = useState({}); // { productId: qty }
@@ -172,7 +173,7 @@ export default function Browse({
           <div className="filter-group-wrapper">
             <h4 className="filter-group-title">Wholesale Segment</h4>
             <div className="filter-checkbox-list">
-              {allCategories.map((category) => (
+              {categoriesList.map((category) => (
                 <label key={category} className="checkbox-label-row">
                   <input 
                     type="checkbox"
@@ -471,7 +472,7 @@ export default function Browse({
               {/* Tab 1: Categories checkboxes */}
               {mobileDrawerTab === 'category' && (
                 <div className="drawer-checkbox-list">
-                  {allCategories.map((category) => (
+                  {categoriesList.map((category) => (
                     <label key={category} className="drawer-label-row">
                       <input 
                         type="checkbox"

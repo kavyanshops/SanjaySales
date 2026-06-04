@@ -6,7 +6,7 @@ import amul from '../assets/amul.jpg';
 
 export default function Home({ 
   products,            // dynamic state passed from App.jsx
-  categoryImages,      // dynamic state passed from App.jsx
+  categories,          // dynamic state passed from App.jsx
   setSelectedCategories, 
   setSelectedBrands,
   onAddToCart 
@@ -118,53 +118,18 @@ export default function Home({
     return `/SanjaySales${cleanPath}`;
   };
 
-  // Dynamic circular categories utilizing categoryImages state prop
-  const categoriesList = [
-    { 
-      name: "Chocolates & Candies", 
-      icon: <img src={resolveImgSrc(categoryImages["Chocolates & Candies"] || "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Cadbury_logo_new.jpg/500px-Cadbury_logo_new.jpg")} alt="Cadbury Chocolates" className="category-icon-img" /> 
-    },
-    { 
-      name: "Daily Use", 
-      icon: <img src={resolveImgSrc(categoryImages["Daily Use"] || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR7kV9hA2yF0-BdwARpbVqum34JV7P2cR5fA&s")} alt="Daily needs cleaning mops" className="category-icon-img" /> 
-    },
-    { 
-      name: "Home Essentials", 
-      icon: <img src={resolveImgSrc(categoryImages["Home Essentials"] || "https://cdn.brandfetch.io/domain/springwel.in/fallback/lettermark/theme/dark/h/400/w/400/icon?c=1bfwsmEH20zzEfSNTed")} alt="Home Curtains" className="category-icon-img" /> 
-    },
-    { 
-      name: "Preservatives", 
-      icon: <img src={resolveImgSrc(categoryImages["Preservatives"] || "chips_category.jpg")} alt="Chips snacks" className="category-icon-img" /> 
-    },
-    { 
-      name: "Sweets & Namkeen", 
-      icon: <img src={resolveImgSrc(categoryImages["Sweets & Namkeen"] || "rasgulla_category.jpg")} alt="Sweets Rasgulla" className="category-icon-img" /> 
-    },
-    { 
-      name: "Beverages", 
-      icon: <img src={resolveImgSrc(categoryImages["Beverages"] || "https://www.logodesignlove.com/wp-content/uploads/2021/07/coca-cola-logo-arden-square-01.jpg")} alt="Coke Beverage" className="category-icon-img" /> 
-    },
-    { 
-      name: "Grains & Masalas", 
-      icon: <img src={resolveImgSrc(categoryImages["Grains & Masalas"] || "https://prithvienterprises.co.in/cdn/shop/collections/Aashirvaad_Logo.png?v=1746877542&width=750")} alt="Grains Atta" className="category-icon-img" /> 
-    },
-    { 
-      name: "Fresh & Dairy", 
-      icon: <img src={resolveImgSrc(categoryImages["Fresh & Dairy"] || "https://animationvisarts.com/wp-content/uploads/2023/12/Frame-32-6.png")} alt="Fresh & Dairy" className="category-icon-img" /> 
-    },
-    { 
-      name: "Snacks & Biscuits", 
-      icon: <img src={resolveImgSrc(categoryImages["Snacks & Biscuits"] || "https://images.yourstory.com/cs/images/companies/4146603810349766400073541079337822789304320o-1611498760663.png?fm=auto&ar=1%3A1&mode=fill&fill=solid&fill-color=fff&format=auto&w=1920&q=85")} alt="Snacks & Biscuits" className="category-icon-img" /> 
-    },
-    { 
-      name: "Cosmetics & Hygiene", 
-      icon: <img src={resolveImgSrc(categoryImages["Cosmetics & Hygiene"] || "https://i.pinimg.com/736x/da/78/1d/da781de9ad2bffefcedb6d872856900c.jpg")} alt="Cosmetics & Hygiene" className="category-icon-img" /> 
-    },
-    { 
-      name: "More", 
-      icon: <div className="category-more-text">MORE →</div> 
-    }
-  ];
+  // Dynamic circular categories utilizing dynamic categories prop
+  const homeCategories = (categories || []).filter(cat => cat.showOnHome);
+
+  const categoriesList = homeCategories.map(cat => ({
+    name: cat.name,
+    icon: <img src={resolveImgSrc(cat.imageUrl)} alt={cat.name} className="category-icon-img" />
+  }));
+
+  categoriesList.push({
+    name: "More",
+    icon: <div className="category-more-text">MORE →</div>
+  });
 
   const brandLogos = [
     { name: "Amul", logo: "amul.jpg" },
