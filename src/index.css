@@ -3529,10 +3529,18 @@ html, body {
 
 /* 11. BLINKIT STYLE CATEGORIES GRID */
 .categories-blinkit-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  display: flex;
   gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 8px 4px 16px;
   margin-top: 20px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.categories-blinkit-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .category-blinkit-card {
@@ -3548,6 +3556,9 @@ html, body {
   padding: 14px 10px;
   box-shadow: var(--shadow-sm);
   box-sizing: border-box;
+  flex: 0 0 110px;
+  width: 110px;
+  min-width: 110px;
 }
 
 .category-blinkit-card:hover {
